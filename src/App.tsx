@@ -19,8 +19,29 @@ import {
 
 type Piece = ReturnType<typeof randomPiece>;
 
-const CELL_SIZE = 30; // px
-const PREVIEW_CELL = 24; // px
+// Board cell size responds to viewport so the whole game always fits,
+// never overflows. Base 30px scaled down on short/narrow windows.
+function useCellSize(): number {
+  const [cell, setCell] = useState(30);
+  useEffect(() => {
+    const compute = () => {
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      // Board height must fit within (viewport - stats/panels chrome).
+      // ~120px reserved for top stats + paddings; ~180px for side panel width.
+      const byHeight = Math.floor((vh - 150) / 20);
+      const byWidth = Math.floor((vw - 240) / 10);
+      const next = Math.max(14, Math.min(30, byHeight, byWidth));
+      setCell(next);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, []);
+  return cell;
+}
+
+const PREVIEW_CELL = 22; // px (scaled separately via CSS transform)
 const PREVIEW_SIZE = 4; // 4x4 fixed grid
 
 /** Renders a tetromino center-aligned in a fixed 4x4 preview grid. */
@@ -62,6 +83,7 @@ const PiecePreview: React.FC<{ piece: Piece | null; dimmed?: boolean }> = ({ pie
 };
 
 const App: React.FC = () => {
+  const CELL_SIZE = useCellSize();
   const [board, setBoard] = useState<number[][]>(emptyBoard());
   const [piece, setPiece] = useState<Piece | null>(null);
   const [next, setNext] = useState<Piece>(() => randomPiece());
