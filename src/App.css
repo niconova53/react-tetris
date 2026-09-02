@@ -1,11 +1,36 @@
+/* ============================================================================
+   Sugar Rush Playful System — aesthetic layer only
+   Paleta "candy": fresa/arándano/limón sobre crema vainilla.
+   No cambia jugabilidad ni estructura del DOM. Solo apariencia.
+   ============================================================================ */
+
+:root {
+  /* Cores candy (design system "Sugar Rush") */
+  --candy-primary: #ff4d6d;      /* fresa */
+  --candy-secondary: #4cc9f0;    /* arándano */
+  --candy-tertiary: #ffd60a;     /* limón */
+  --candy-cream: #fff0f3;        /* crema vainilla */
+  --candy-surface: #fff8f8;
+  --candy-surface-container: #f9eaed;
+  --candy-surface-dim: #e5d7d9;
+  --candy-dark: #372e31;
+  --candy-text: #211a1c;
+  --candy-on-surface-variant: #5a4042;
+
+  /* Tipografías redondeadas */
+  --font-headline: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --font-body: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+  --font-label: 'Quicksand', 'Segoe UI', sans-serif;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background: #111;
-  color: #fff;
-  font-family: 'Segoe UI', Arial, sans-serif;
   height: 100%;
   overflow: hidden;
+  background: radial-gradient(circle at 20% 10%, #fff0f3 0%, #ffe9ec 55%, #ffdde4 100%);
+  color: var(--candy-text);
+  font-family: var(--font-body);
 }
 
 #root {
@@ -18,83 +43,138 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 12px;
+  gap: 20px;
+  padding: 24px;
   box-sizing: border-box;
 }
 
+/* ── Score / Level / Lines: chips tipo "jelly bean" ─────────────────────── */
 .stats {
   display: flex;
-  gap: 24px;
-  font-size: 18px;
-  font-weight: bold;
+  gap: 16px;
+  font-family: var(--font-headline);
+  font-weight: 800;
 }
 
+.stats > div {
+  background: var(--candy-surface);
+  color: var(--candy-text);
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  box-shadow:
+    0 4px 0 var(--candy-surface-dim),
+    0 10px 22px rgba(182, 14, 61, 0.18);
+}
+
+/* ── Play area ─────────────────────────────────────────────────────────── */
 .play-area {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   align-items: flex-start;
 }
 
+/* ── Board: carpeta "hard shell" con borde pill e inner glow ────────────── */
 .board {
   position: relative;
-  background: #222;
-  border: 2px solid #444;
   flex-shrink: 0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.10), transparent 55%),
+    var(--candy-surface-container);
+  border-radius: 24px;
+  padding: 8px;
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.55),
+    inset 0 -4px 10px rgba(182, 14, 61, 0.10),
+    0 16px 36px rgba(182, 14, 61, 0.25);
+  box-sizing: content-box;
 }
 
+/* Cada celda (tile) con look "hard shell": gradiente radial + pequeño bevel */
 .cell {
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.18);
 }
 
+.cell.filled {
+  border-radius: 6px;
+}
+
+/* ── Side panel: tarjetas candy ────────────────────────────────────────── */
 .side-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-width: 140px;
+  gap: 18px;
+  min-width: 150px;
+}
+
+.hold-panel,
+.next-panel {
+  background: var(--candy-surface);
+  border-radius: 20px;
+  padding: 14px 16px;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.6),
+    0 8px 20px rgba(182, 14, 61, 0.16);
 }
 
 .hold-panel h4,
 .next-panel h4 {
-  margin: 0 0 6px 0;
-  font-size: 14px;
+  margin: 0 0 10px 0;
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #aaa;
+  letter-spacing: 1.4px;
+  color: var(--candy-on-surface-variant);
 }
 
 .preview-grid {
   display: grid;
-  grid-template-columns: repeat(4, 24px);
-  grid-template-rows: repeat(4, 24px);
-  gap: 2px;
-  background: #1a1a1a;
-  padding: 6px;
-  border: 1px solid #333;
-  border-radius: 4px;
+  grid-template-columns: repeat(4, 22px);
+  grid-template-rows: repeat(4, 22px);
+  gap: 3px;
+  background: var(--candy-surface-container);
+  padding: 7px;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 4px rgba(182, 14, 61, 0.08);
 }
 
 .preview-cell {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
   box-sizing: border-box;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
+/* ── Controls (solo texto informativo) ─────────────────────────────────── */
 .controls {
+  font-family: var(--font-label);
   font-size: 12px;
-  color: #888;
-  line-height: 1.5;
+  color: var(--candy-on-surface-variant);
+  line-height: 1.6;
+  background: var(--candy-surface);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 16px rgba(182, 14, 61, 0.12);
 }
 
 .controls p {
   margin: 2px 0;
 }
 
+/* ── Overlays (pausa / game over): backdrop blur "floating layer" ──────── */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(255, 200, 210, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,24 +182,44 @@ html, body {
 }
 
 .overlay-text {
-  font-size: 36px;
-  font-weight: bold;
+  font-family: var(--font-headline);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
   text-align: center;
+  color: var(--candy-text);
+  background: var(--candy-surface);
+  padding: 32px 44px;
+  border-radius: 32px;
+  box-shadow:
+    0 6px 0 var(--candy-surface-dim),
+    0 24px 48px rgba(182, 14, 61, 0.30);
 }
 
 .overlay-sub {
+  font-family: var(--font-body);
   font-size: 18px;
-  margin: 8px 0 16px;
-  color: #ccc;
+  margin: 10px 0 20px;
+  color: var(--candy-on-surface-variant);
 }
 
 .overlay button {
-  font-size: 16px;
-  padding: 8px 20px;
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 12px 28px;
   cursor: pointer;
-  background: #f0f000;
-  color: #111;
+  background: linear-gradient(180deg, #ff6b84 0%, var(--candy-primary) 100%);
+  color: #fff;
   border: none;
-  border-radius: 4px;
-  font-weight: bold;
+  border-radius: 9999px;
+  box-shadow:
+    0 5px 0 #d13a58,
+    0 12px 24px rgba(209, 58, 88, 0.35);
+}
+
+.overlay button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #d13a58;
 }

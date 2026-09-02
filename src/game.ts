@@ -19,13 +19,13 @@ export const PIECE_MAP: Record<PieceName, number> = {
 };
 
 export const PIECE_COLORS: Record<number, string> = {
-  1: '#00f0f0',
-  2: '#0000f0',
-  3: '#f08000',
-  4: '#f0f000',
-  5: '#00f000',
-  6: '#a000f0',
-  7: '#f00000',
+  1: '#4cc9f0', // I — arándano (celeste)
+  2: '#4361ee', // J — azul profundo
+  3: '#ff9f1c', // L — naranja caramelo
+  4: '#ffd60a', // O — limón
+  5: '#06d6a0', // S — menta
+  6: '#b5179e', // T — uva (morado)
+  7: '#ef476f', // Z — fresa (rosa/rojo)
 };
 
 export const boardWidth = 10;
