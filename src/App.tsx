@@ -19,26 +19,28 @@ import {
 
 type Piece = ReturnType<typeof randomPiece>;
 
-// Board cell size responds to viewport so the whole game always fits,
-// never overflows. Base 30px scaled down on short/narrow windows.
-function useCellSize(): number {
-  const [cell, setCell] = useState(30);
+const CELL_SIZE = 30; // px — design/base size; everything scales uniformly via --scale
+
+// Returns a single uniform scale factor (0..1) so the ENTIRE game —
+// board, cells, panels, text, borders — shrinks in exact proportion.
+function useScale(): number {
+  const [scale, setScale] = useState(1);
   useEffect(() => {
     const compute = () => {
       const vh = window.innerHeight;
       const vw = window.innerWidth;
-      // Board height must fit within (viewport - stats/panels chrome).
-      // ~120px reserved for top stats + paddings; ~180px for side panel width.
-      const byHeight = Math.floor((vh - 150) / 20);
-      const byWidth = Math.floor((vw - 240) / 10);
-      const next = Math.max(14, Math.min(30, byHeight, byWidth));
-      setCell(next);
+      // Base layout is fixed (~360px wide board + ~160px side panel + gaps,
+      // plus ~150px chrome for stats & padding). Scale so it always fits.
+      const byHeight = (vh - 180) / 640; // 640 = ~20 rows * 30px + panels + chrome
+      const byWidth = (vw - 40) / 560;   // 560 = ~board 300 + panel 160 + gaps + padding
+      const next = Math.max(0.35, Math.min(1, byHeight, byWidth));
+      setScale(next);
     };
     compute();
     window.addEventListener('resize', compute);
     return () => window.removeEventListener('resize', compute);
   }, []);
-  return cell;
+  return scale;
 }
 
 const PREVIEW_CELL = 22; // px (scaled separately via CSS transform)
@@ -83,7 +85,7 @@ const PiecePreview: React.FC<{ piece: Piece | null; dimmed?: boolean }> = ({ pie
 };
 
 const App: React.FC = () => {
-  const CELL_SIZE = useCellSize();
+  const scale = useScale();
   const [board, setBoard] = useState<number[][]>(emptyBoard());
   const [piece, setPiece] = useState<Piece | null>(null);
   const [next, setNext] = useState<Piece>(() => randomPiece());
@@ -401,51 +403,56 @@ const App: React.FC = () => {
 
   return (
     <div className="game-container" tabIndex={0}>
-      <div className="stats">
-        <div>Score: {score}</div>
-        <div>Level: {level}</div>
-        <div>Lines: {lines}</div>
-      </div>
-
-      <div className="play-area">
-        <div
-          className="board"
-          style={{ width: boardWidth * CELL_SIZE, height: boardHeight * CELL_SIZE }}
-        >
-          {cells.map(c => (
-            <div
-              key={`${c.x}-${c.y}`}
-              className="cell filled"
-              style={{
-                width: CELL_SIZE,
-                height: CELL_SIZE,
-                backgroundColor: PIECE_COLORS[c.id],
-                position: 'absolute',
-                left: c.x * CELL_SIZE,
-                top: c.y * CELL_SIZE,
-              }}
-            />
-          ))}
+      <div
+        className="scale-wrap"
+        style={{ transform: `scale(${scale})` }}
+      >
+        <div className="stats">
+          <div>Score: {score}</div>
+          <div>Level: {level}</div>
+          <div>Lines: {lines}</div>
         </div>
 
-        <div className="side-panel">
-          <div className="hold-panel">
-            <h4>Hold</h4>
-            <PiecePreview piece={hold} dimmed={!canHold} />
+        <div className="play-area">
+          <div
+            className="board"
+            style={{ width: boardWidth * CELL_SIZE, height: boardHeight * CELL_SIZE }}
+          >
+            {cells.map(c => (
+              <div
+                key={`${c.x}-${c.y}`}
+                className="cell filled"
+                style={{
+                  width: CELL_SIZE,
+                  height: CELL_SIZE,
+                  backgroundColor: PIECE_COLORS[c.id],
+                  position: 'absolute',
+                  left: c.x * CELL_SIZE,
+                  top: c.y * CELL_SIZE,
+                }}
+              />
+            ))}
           </div>
 
-          <div className="next-panel">
-            <h4>Next</h4>
-            <PiecePreview piece={next} />
-          </div>
+          <div className="side-panel">
+            <div className="hold-panel">
+              <h4>Hold</h4>
+              <PiecePreview piece={hold} dimmed={!canHold} />
+            </div>
 
-          <div className="controls">
-            <p>← → move</p>
-            <p>↑ rotate</p>
-            <p>↓ soft drop</p>
-            <p>Space hard drop</p>
-            <p>C hold</p>
-            <p>P pause</p>
+            <div className="next-panel">
+              <h4>Next</h4>
+              <PiecePreview piece={next} />
+            </div>
+
+            <div className="controls">
+              <p>← → move</p>
+              <p>↑ rotate</p>
+              <p>↓ soft drop</p>
+              <p>Space hard drop</p>
+              <p>C hold</p>
+              <p>P pause</p>
+            </div>
           </div>
         </div>
       </div>

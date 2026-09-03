@@ -40,12 +40,18 @@ html, body {
 .game-container {
   height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 24px;
   box-sizing: border-box;
+}
+
+/* Uniform scale wrapper: the whole game scales together via transform */
+.scale-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform-origin: center center;
 }
 
 /* ── Score / Level / Lines: chips tipo "jelly bean" ─────────────────────── */
