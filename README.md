@@ -1,32 +1,95 @@
-# React + TypeScript + Vite
+# 🍬 React Tetris — *Sugar Rush*
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Un juego de **Tetris** completo, construido con **React + TypeScript + Vite**, con una estética "candy" (Sugar Rush Playful System) y despliegue automático en GitHub Pages.
 
-Currently, two official plugins are available:
+🔗 **Demo en vivo:** https://niconova53.github.io/react-tetris/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Características
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Jugabilidad (fiel al Tetris clásico)
+- **Gravedad automática** — las piezas caen solas con intervalos por nivel (tabla oficial Nintendo).
+- **Soft drop** — `↓` mueve la pieza una celda por pulsación.
+- **Hard drop** — `Espacio` deja caer la pieza instantáneamente y fija.
+- **Lock delay de 500 ms** — la pieza queda fija 500 ms después de tocar el suelo/otra pieza; moverse o rotar durante esa ventana reinicia el temporizador.
+- **Preview de la siguiente pieza** y sistema de **Hold** (`C`), una vez por pieza.
+- **Limpieza de líneas**, **scoring Nintendo** (100/300/500/800 × nivel), y **progresión de nivel** cada 10 líneas.
+- **Detección de game over** al colisionar una pieza nueva en su posición de spawn.
 
-## Expanding the Oxlint configuration
+### Controles
+| Tecla | Acción |
+|-------|--------|
+| `←` / `→` | Mover |
+| `↑` | Rotar |
+| `↓` | Soft drop |
+| `Espacio` | Hard drop |
+| `C` | Hold |
+| `P` | Pausa |
+| `R` | Reiniciar (tras game over) |
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### Diseño
+- **Sugar Rush Playful System**: paleta *candy* (fresa/arándano/limón sobre crema vainilla), paneles redondeados tipo *pill*, sombras "gummy", *inner glow* y *bottom bevel*.
+- Tiles de las piezas con acabado "hard shell" (gradiente radial + bevel suave).
+- Tipografías redondeadas: **Plus Jakarta Sans**, **Be Vietnam Pro**, **Quicksand**.
+- **Responsive**: el juego escalado uniformemente (`transform: scale`) para que siempre quepa en pantalla sin desbordes.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+---
+
+## 🛠️ Tecnologías
+
+- **React 18** + **TypeScript** (modo estricto)
+- **Vite 5** (`@vitejs/plugin-react-swc`)
+- **Vitest** para tests unitarios de la lógica del juego
+- **GitHub Actions** para CI/CD (deploy automático a Pages)
+
+---
+
+## 🚀 Empezar
+
+```bash
+# Instalar dependencias
+npm install
+
+# Modo desarrollo
+npm run dev
+
+# Tests
+npm test
+
+# Build de producción
+npm run build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 📁 Estructura
+
+```
+src/
+ ├─ game.ts        # Lógica pura del juego (tetrominos, rotación, colisión, scoring)
+ ├─ game.test.ts   # Tests unitarios (Vitest)
+ ├─ App.tsx        # UI + estado (hooks, timers, teclado)
+ ├─ App.css        # Estilos (Sugar Rush system)
+ └─ main.tsx       # Entry point
+```
+
+La lógica del juego está completamente separada de la UI (`game.ts` es puro, sin React), lo que facilita el testing y el mantenimiento.
+
+---
+
+## 🧪 Tests
+
+14 tests unitarios cubren: rotación de piezas, detección de colisión, limpieza de líneas, scoring, progresión de nivel y game over.
+
+```bash
+npm test
+```
+
+---
+
+## 🌐 Despliegue
+
+El proyecto se despliega automáticamente en **GitHub Pages** con cada push a `main` (vía GitHub Actions, ver `.github/workflows/deploy.yml`).
+
+- **URL:** https://niconova53.github.io/react-tetris/
